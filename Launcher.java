@@ -1,12 +1,46 @@
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.*;
 public class Launcher {
+    @SuppressWarnings("CallToPrintStackTrace")
     public static void main (String [] args) {
-    	ReadSettings(); // just for testing, remove later
+        LinkedList<File> library = (LinkedList<File>) ReadLibrary("library");
+
+        // Greeting Dialogue
+        System.out.println("""
+                           ------------------- SIMPLE GAMES LAUNCHER -------------------
+                           \t1. View Library
+                           \t2. View Settings""");
+
+        // If used again, validInput must be reset to false
+        boolean validInput = false;
+        char option = 0;
+        while (!validInput) {
+            int readbyte;
+            try{
+                readbyte = System.in.read();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return;
+            }
+
+            option = (char) readbyte;
+
+            if (option == '1' || option == '2') 
+                validInput = true;
+            else
+                System.out.println("Invalid Input\nType 1. or 2.");
+        }
+
+        if (option == '1') {
+            int i = 1;
+            for (File f : library) {
+                System.out.println(i + ". " +f.getName());
+                i++;
+            }
+        }
+        if (option == '2') {
+            ReadSettings(); // just for testing, remove later
+        }
     }
 
     // TODO: Finish testing/debugging this method
