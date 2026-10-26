@@ -47,6 +47,7 @@ public class Launcher {
             }
         }
         if (option == '2') {
+        // TODO: Build concrete way to find settings file
             System.out.println("------------------- SETTINGS -------------------");
             File parentDir = new File(
                 Launcher.class
@@ -80,7 +81,6 @@ public class Launcher {
         }
     }
 
-    // TODO: Test this method
     /**
      * Reads the library folder at directory targetDir.
      * @param targetDir the library directory
@@ -118,13 +118,16 @@ public class Launcher {
     }
 
     /**
-     * 
+     * Reads config file c and returns as Map<Setting,Value>
+     * @param c Config text file
+     * @return Map containing all settings and their set values.
+     * (MAY NOT NEED TO EXIST, WILL BE DECIDED LATER)
      */
     public static Map<String,String> parseConfig (File c) throws FileNotFoundException {
-        HashMap<String,String> configMap = new HashMap<String,String>();
+        HashMap<String,String> configMap = new HashMap<>();
         Scanner sc = new Scanner(c);
 
-        String line,key,value = ""; 
+        String line,key,value; 
         while (sc.hasNext()) {
             line = sc.nextLine();
             String[] s = line.split(":");
