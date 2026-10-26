@@ -1,9 +1,10 @@
 import java.io.*;
 import java.util.*;
+import java.util.Map.Entry;
 public class Launcher {
     @SuppressWarnings("CallToPrintStackTrace")
-    public static void main (String [] args) {
-        LinkedList<File> library = (LinkedList<File>) ReadLibrary("library");
+    public static void main (String [] args) throws FileNotFoundException {
+        ArrayList<File> library = (ArrayList<File>) ReadLibrary("library");
 
         // Greeting Dialogue
         System.out.println("""
@@ -31,7 +32,14 @@ public class Launcher {
                 System.out.println("Invalid Input\nType 1. or 2.");
         }
 
+        System.out.println("\n");
+
         if (option == '1') {
+            System.out.println("------------------- LIBRARY -------------------");
+
+            if (library.isEmpty()) {
+                System.out.println("Library is empty!");
+            }
             int i = 1;
             for (File f : library) {
                 System.out.println(i + ". " +f.getName());
@@ -39,7 +47,19 @@ public class Launcher {
             }
         }
         if (option == '2') {
-            ReadSettings(); // just for testing, remove later
+            System.out.println("------------------- SETTINGS -------------------");
+            File parentDir = new File(
+                Launcher.class
+                    .getProtectionDomain()
+                    .getCodeSource()
+                    .getLocation()
+                    .getPath()
+            ).getParentFile();
+            File settingsFile = new File(parentDir, "settings.txt");
+            Map<String,String> settings = parseConfig(settingsFile);
+            for (Entry<String,String> e : settings.entrySet()) {
+                System.out.println(e.getKey() + ": " + e.getValue());
+            }
         }
     }
 
@@ -95,6 +115,26 @@ public class Launcher {
         gameFiles = new ArrayList<>(Arrays.asList(libraryDir.listFiles()));
 
         return gameFiles;
+    }
+
+    /**
+     * 
+     */
+    public static Map<String,String> parseConfig (File c) throws FileNotFoundException {
+        HashMap<String,String> configMap = new HashMap<String,String>();
+        Scanner sc = new Scanner(c);
+
+        String line,key,value = ""; 
+        while (sc.hasNext()) {
+            line = sc.nextLine();
+            String[] s = line.split(":");
+            key = s[0];
+            value = s[1];
+            configMap.put(key, value);
+        }
+
+        return configMap;
+
     }
     
     // TODO: add ability to write to settings
