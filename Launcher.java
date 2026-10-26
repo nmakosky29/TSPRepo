@@ -191,4 +191,42 @@ public class Launcher {
         	e.printStackTrace();
         }
     }
+    /**
+     * Writes to the settings file.
+     * @param updatedSettings the list of settings that will be written, in order of the file
+     */
+    public static void WriteSettings(int[] updatedSettings) {
+        String settingsFile = "settings.txt";
+        File file = new File(settingsFile);
+
+        try {
+            // if file doesn't exist, create it with default values
+            if (!file.exists()) {
+                ReadSettings();
+            }
+
+            // prevents out of range settings
+            int aiDifficulty = updatedSettings[0];
+            if (aiDifficulty < 1) aiDifficulty = 1;
+            if (aiDifficulty > 3) aiDifficulty = 3;
+
+            int turnOrder = updatedSettings[1];
+            if (turnOrder < 1) turnOrder = 1;
+            if (turnOrder > 2) turnOrder = 2;
+
+            int boardSize = updatedSettings[2];
+            if (boardSize < 1) boardSize = 1;
+            if (boardSize > 3) boardSize = 3;
+
+            // writes new settings into file
+            try (PrintWriter writer = new PrintWriter(new FileWriter(file))) {
+                writer.println("aiDifficulty=" + aiDifficulty);
+                writer.println("turnOrder=" + turnOrder);
+                writer.println("boardSize=" + boardSize);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
