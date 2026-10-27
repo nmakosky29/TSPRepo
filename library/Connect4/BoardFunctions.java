@@ -10,7 +10,7 @@ public class BoardFunctions {
         System.out.flush();
     }
 
-    public static void testClearConsole() {
+    protected static void testClearConsole() {
         try {
             // 1. Attempt ANSI escape codes
             System.out.print("\033[H\033[2J");
