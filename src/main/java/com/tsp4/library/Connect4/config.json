@@ -1,7 +1,8 @@
 {
     "name": "Connect 4",
-    "boardSize": {
-        "columns": 7,
-        "rows": 6
-    }
+    "columns": 7,
+    "rows": 6,
+    "emptyChar": ".",
+    "playerChar": "X",
+    "botChar": "O"
 }

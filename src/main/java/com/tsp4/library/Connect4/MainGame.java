@@ -9,21 +9,40 @@ public class MainGame {
 
     public static void main(String[] args) {
 
-        // Inits an empty board and prints it for testing purposes
-        int cols = 7;
-        int rows = 6;
-        String emptyChar = ".";
+        // Makes new object to read JSON file
+        JsonNode config = jsonReader("config.json");
+        String name = config.get("name").asString();
 
+        // Checks to make sure correct file is loaded
+        if (!name.equals("Connect 4")) throw new IllegalArgumentException("wrong config file: name is \"" + name + "\"");
+
+        // Loads JSON info
+        int cols = config.get("columns").asInt();
+        int rows = config.get("rows").asInt();
+        String emptyChar = config.get("emptyChar").asString();
+        String playerChar = config.get("playerChar").asString();
+        String botChar = config.get("botChar").asString();
+
+        // Creates a board and prints it
         String[][] board = BoardFunctions.initBoard(cols, rows, emptyChar);
         BoardFunctions.printBoard(board, 7, 6);
 
 
     }
+
+    /**
+     * Creates a JsonNode object to read JSON files.
+     * @param configFileName
+     * @return JsonNode
+     */
     protected static JsonNode jsonReader(String configFileName) {
+
+        // Tries to find the config file in the game folder
         try (InputStream in = MainGame.class.getResourceAsStream(configFileName)) {
             if (in == null) {
                 throw new RuntimeException("config file not found: " + configFileName);
             }
+            // Returns the JsonNode if success
             return new ObjectMapper().readTree(in);
         } catch (IOException e) {
             throw new RuntimeException("could not read " + configFileName, e);
