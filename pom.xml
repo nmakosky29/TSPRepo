@@ -35,7 +35,7 @@
 
   <build>
     <resources>
-      <resource>
+      <resource><!-- Allows the configs to stay in game folders at compile time. Remove if modularity is established -->
         <directory>src/main/resources</directory>
       </resource>
       <resource>

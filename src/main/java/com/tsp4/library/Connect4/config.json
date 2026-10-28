@@ -1,5 +1,5 @@
 {
-    "name": "Connect 4",
+    "name": "Connect4",
     "columns": 7,
     "rows": 6,
     "emptyChar": ".",

@@ -1,8 +1,10 @@
 package com.tsp4.library.Connect4;
 
+import static com.tsp4.library.Connect4.MainGame.*;
+
 public class BoardFunctions {
 
-    public static void clearConsole() {
+    protected static void clearConsole() {
         try {
             // 1. Attempt ANSI escape codes
             System.out.print("\033[H\033[2J");
@@ -33,35 +35,28 @@ public class BoardFunctions {
 
     /**
      * Creates a game board filled with the empty character.
-     * @param cols
-     * @param rws
      * @param emptyChar
      * @return game board filled with the empty character.
      */
-    public static String[][] initBoard(int cols, int rws, String emptyChar) {
-        String[][] board = new String[cols][rws];
+    protected static void initBoard() {
+        board = new String[rows][cols];
 
         // Fills board with empty char
-        for (int i = 0; i < rws - 1; i++) {
-            for (int j = 0; j < cols - 1; j++) {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
                 board[i][j] = emptyChar;
             }
         }
-
-        return board;
     }
 
     /**
      * Prints the game board.
-     * @param board
-     * @param cols
-     * @param rws
      */
-    public static void printBoard(String[][] board, int cols, int rws) {
+    protected static void printBoard() {
 
         // Prints the board to terminal
-        for (int i = 0; i < rws - 1; i++) {
-            for (int j = 0; j < cols - 1; j++) {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
                 System.out.print(" | " + board[i][j]);
             }
 
@@ -70,19 +65,18 @@ public class BoardFunctions {
         }
 
         // Prints the bottom of the board
-        printBoardBottom(cols);
+        printBoardBottom();
     }
 
     /**
      * Prints the bottom of the board.
-     * @param cols
      */
-    private static void printBoardBottom(int cols) {
+    private static void printBoardBottom() {
 
         // This section prints dashes in-between the pieces and col nums
         System.out.print(" ");
 
-        for (int j = 0; j < cols - 1; j++) {
+        for (int j = 0; j < cols; j++) {
             System.out.print("----");
         }
 
@@ -90,7 +84,7 @@ public class BoardFunctions {
         System.out.print("\n");
 
         // This section prints the col nums
-        for (int j = 0; j < cols - 1; j++) {
+        for (int j = 0; j < cols; j++) {
             System.out.print(" | " + (j + 1));
         }
 
