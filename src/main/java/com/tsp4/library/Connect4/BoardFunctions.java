@@ -1,16 +1,8 @@
-package library.Connect4;
+package com.tsp4.library.Connect4;
 
 public class BoardFunctions {
 
-    /**
-     * Modified version of ClearConsole() method from Launcher.
-     */
-    protected static void clearConsole() {
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
-    }
-
-    protected static void testClearConsole() {
+    public static void clearConsole() {
         try {
             // 1. Attempt ANSI escape codes
             System.out.print("\033[H\033[2J");
@@ -46,8 +38,8 @@ public class BoardFunctions {
      * @param emptyChar
      * @return game board filled with the empty character.
      */
-    protected static char[][] initBoard(int cols, int rws, char emptyChar) {
-        char[][] board = new char[cols][rws];
+    public static String[][] initBoard(int cols, int rws, String emptyChar) {
+        String[][] board = new String[cols][rws];
 
         // Fills board with empty char
         for (int i = 0; i < rws - 1; i++) {
@@ -65,7 +57,7 @@ public class BoardFunctions {
      * @param cols
      * @param rws
      */
-    protected static void printBoard(char[][] board, int cols, int rws) {
+    public static void printBoard(String[][] board, int cols, int rws) {
 
         // Prints the board to terminal
         for (int i = 0; i < rws - 1; i++) {
