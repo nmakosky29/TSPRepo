@@ -1,0 +1,7 @@
+{
+    "name": "Connect 4",
+    "boardSize": {
+        "columns": 7,
+        "rows": 6
+    }
+}

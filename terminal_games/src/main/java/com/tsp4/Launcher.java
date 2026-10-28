@@ -1,3 +1,5 @@
+package terminal_games.src.main.java.com.tsp4;
+
 import java.io.*;
 import java.util.*;
 import java.util.Map.Entry;

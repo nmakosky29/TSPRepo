@@ -1,3 +1,0 @@
-aiDifficulty:2
-turnOrder:1
-boardSize:2
