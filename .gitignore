@@ -1,1 +1,14 @@
 *.class
+# Maven build output
+target/
+
+# IDE / VS Code configuration
+.vscode/
+.classpath
+.project
+.settings/
+
+# Java compiled output
+*.class
+*.jar
+*.war
