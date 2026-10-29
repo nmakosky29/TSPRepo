@@ -1,7 +1,5 @@
 package com.tsp4.library.Connect4;
 
-import static com.tsp4.library.Connect4.MainGame.*;
-
 public class BoardFunctions {
 
     protected static void clearConsole() {
@@ -92,6 +90,24 @@ public class BoardFunctions {
         System.out.print(" |");
 
         System.out.flush();
+    }
+
+    protected static int checkWin(char[][] b, int row, int col, char team) {
+        int vert  = 1 + countDirection(b, row, col, -1,  0, team) + countDirection(b, row, col, 1,  0, team);
+        int horiz = 1 + countDirection(b, row, col,  0, -1, team) + countDirection(b, row, col, 0,  1, team);
+        int diagA = 1 + countDirection(b, row, col, -1, -1, team) + countDirection(b, row, col, 1,  1, team);
+        int diagB = 1 + countDirection(b, row, col,  1, -1, team) + countDirection(b, row, col, -1, 1, team);
+        return Math.max(Math.max(vert, horiz), Math.max(diagA, diagB));
+    }
+
+    private static int countDirection(char[][] b, int row, int col, int dRow, int dCol, char team) {
+        int count = 0;
+        for (int i = 1; i <= 3; i++) {
+            int r = row + dRow * i, c = col + dCol * i;
+            if (r < 0 || r >= b.length || c < 0 || c >= b[0].length || b[r][c] != team) break;
+            count++;
+        }
+        return count;
     }
 
 

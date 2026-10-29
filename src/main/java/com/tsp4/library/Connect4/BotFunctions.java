@@ -2,8 +2,6 @@ package com.tsp4.library.Connect4;
 
 import java.util.ArrayList;
 
-import static com.tsp4.library.Connect4.MainGame.*;
-
 public class BotFunctions {
 
     protected static double sigmoid(double x) {
@@ -17,22 +15,33 @@ public class BotFunctions {
         AIPlayNode previousNode;
         ArrayList<Integer> futureNodes = new ArrayList<>();
         AIPlayNode play;
-        String[][] board;
-        String team = botChar;
+        char[][] board;
+        int cols;
+        int rows;
+        char team;
+        char emptyChar;
         int score;
-        ArrayList<Integer> possiblePlays;
+        ArrayList<Integer> possiblePlays = new ArrayList<>();
 
         AIPlayNode(int maxDepth,
                    AIPlayNode previousNode,
                    AIPlayNode play,
-                   String[][] board) {
+                   char[][] board,
+                   int rows,
+                   int cols,
+                   char team,
+                   char emptyChar) {
             this.maxDepth = maxDepth;
             this. previousNode = previousNode;
             this.play = play;
             this.board = board;
+            this.rows = rows;
+            this.cols = cols;
+            this.team = team;
+            this.emptyChar = emptyChar;
 
             for (int i = 0; i < cols; i++) {
-                if (board[0][i].equals(emptyChar)) {
+                if (board[0][i] == emptyChar) {
                     possiblePlays.add(i);
                 }
             }
