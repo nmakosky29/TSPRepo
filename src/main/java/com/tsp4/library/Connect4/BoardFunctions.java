@@ -35,11 +35,10 @@ public class BoardFunctions {
 
     /**
      * Creates a game board filled with the empty character.
-     * @param emptyChar
      * @return game board filled with the empty character.
      */
-    protected static void initBoard() {
-        board = new String[rows][cols];
+    protected static char[][] initBoard(int rows, int cols, char emptyChar) {
+        char[][] board = new char[rows][cols];
 
         // Fills board with empty char
         for (int i = 0; i < rows; i++) {
@@ -47,12 +46,14 @@ public class BoardFunctions {
                 board[i][j] = emptyChar;
             }
         }
+
+        return board;
     }
 
     /**
      * Prints the game board.
      */
-    protected static void printBoard() {
+    protected static void printBoard(char[][] board, int rows, int cols) {
 
         // Prints the board to terminal
         for (int i = 0; i < rows; i++) {
@@ -65,13 +66,13 @@ public class BoardFunctions {
         }
 
         // Prints the bottom of the board
-        printBoardBottom();
+        printBoardBottom(cols);
     }
 
     /**
      * Prints the bottom of the board.
      */
-    private static void printBoardBottom() {
+    private static void printBoardBottom(int cols) {
 
         // This section prints dashes in-between the pieces and col nums
         System.out.print(" ");

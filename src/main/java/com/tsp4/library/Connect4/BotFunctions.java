@@ -10,13 +10,15 @@ public class BotFunctions {
         return 1 / (1 + Math.exp(-x));
     }
 
+    protected static void simulatePlay(Integer selection) {}
+
     private static class AIPlayNode {
         int maxDepth;
         AIPlayNode previousNode;
-        AIPlayNode[] futureNodes;
+        ArrayList<Integer> futureNodes = new ArrayList<>();
         AIPlayNode play;
         String[][] board;
-        String team = "O";
+        String team = botChar;
         int score;
         ArrayList<Integer> possiblePlays;
 
@@ -36,7 +38,20 @@ public class BotFunctions {
             }
         }
 
+        protected void checkForPossibleWin() {
+            int totalConnectionScore = 0;
+            double connectionWeight = 0.1;
+            int totalEnemyNextNodeScore = 0;
+            double enemyScoreWeight = 0.001;
+            ArrayList<Integer> loosingPlays = new ArrayList<>();
 
+            if (maxDepth >= 0) {
+                for (Integer selection : possiblePlays) {
+
+                }
+            }
+        }
     }
+
 }
 

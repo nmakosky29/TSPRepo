@@ -7,14 +7,6 @@ import java.io.InputStream;
 
 public class MainGame {
 
-    protected static String name;
-    protected static int cols;
-    protected static int rows;
-    protected static String emptyChar;
-    protected static String playerChar;
-    protected static String botChar;
-    protected static String[][] board;
-
     public static void main(String[] args) {
 
         // Makes new object to read JSON file
@@ -25,15 +17,15 @@ public class MainGame {
         if (!name.equals("Connect4")) throw new IllegalArgumentException("wrong config file: name is \"" + name + "\"");
 
         // Loads JSON info
-        cols = config.get("columns").asInt();
-        rows = config.get("rows").asInt();
-        emptyChar = config.get("emptyChar").asString();
-        playerChar = config.get("playerChar").asString();
-        botChar = config.get("botChar").asString();
+        int cols = config.get("columns").asInt();
+        int rows = config.get("rows").asInt();
+        char emptyChar = config.get("emptyChar").asString().charAt(0);
+        char playerChar = config.get("playerChar").asString().charAt(0);
+        char botChar = config.get("botChar").asString().charAt(0);
 
         // Creates a board and prints it for testing
-        BoardFunctions.initBoard();
-        BoardFunctions.printBoard();
+        char[][] board = BoardFunctions.initBoard(rows, cols, emptyChar);
+        BoardFunctions.printBoard(board, rows, cols);
 
 
     }
