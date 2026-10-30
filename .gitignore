@@ -1,4 +1,3 @@
-*.class
 # Maven build output
 target/
 
