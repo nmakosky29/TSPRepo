@@ -2,6 +2,9 @@ package com.tsp4.library.Connect4;
 
 public class BoardFunctions {
 
+    /**
+     * Clears the console.
+     */
     protected static void clearConsole() {
         try {
             // 1. Attempt ANSI escape codes
@@ -36,27 +39,27 @@ public class BoardFunctions {
      * @return game board filled with the empty character.
      */
     protected static char[][] initBoard(int rows, int cols, char emptyChar) {
-        char[][] board = new char[rows][cols];
+        char[][] b = new char[rows][cols];
 
         // Fills board with empty char
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
-                board[i][j] = emptyChar;
+                b[i][j] = emptyChar;
             }
         }
 
-        return board;
+        return b;
     }
 
     /**
      * Prints the game board.
      */
-    protected static void printBoard(char[][] board, int rows, int cols) {
+    protected static void printBoard(char[][] b, int rows, int cols) {
 
-        // Prints the board to terminal
+        // Prints the b to terminal
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
-                System.out.print(" | " + board[i][j]);
+                System.out.print(" | " + b[i][j]);
             }
 
             System.out.print(" |");
@@ -92,6 +95,14 @@ public class BoardFunctions {
         System.out.flush();
     }
 
+    /**
+     * Checks for a win in all legal directions at a given point.
+     * @param b
+     * @param row
+     * @param col
+     * @param team
+     * @return the longest piece string.
+     */
     protected static int checkWin(char[][] b, int row, int col, char team) {
         int vert  = 1 + countDirection(b, row, col, -1,  0, team) + countDirection(b, row, col, 1,  0, team);
         int horiz = 1 + countDirection(b, row, col,  0, -1, team) + countDirection(b, row, col, 0,  1, team);
@@ -100,6 +111,16 @@ public class BoardFunctions {
         return Math.max(Math.max(vert, horiz), Math.max(diagA, diagB));
     }
 
+    /**
+     * Counts the piece string in a given direction.
+     * @param b
+     * @param row
+     * @param col
+     * @param dRow
+     * @param dCol
+     * @param team
+     * @return the length of the string.
+     */
     private static int countDirection(char[][] b, int row, int col, int dRow, int dCol, char team) {
         int count = 0;
         for (int i = 1; i <= 3; i++) {
@@ -108,6 +129,27 @@ public class BoardFunctions {
             count++;
         }
         return count;
+    }
+
+    /**
+     * Copies the board for bot manipulation
+     * @param b
+     * @return copied board.
+     */
+    protected static char[][] copyBoard(char[][] b) {
+        char[][] copy = new char[b.length][];
+        for (int i = 0; i < b.length; i++) copy[i] = b[i].clone();
+        return copy;
+    }
+
+    /**
+     * Row a piece would land in, or -1 if the column is full. Row 0 is the top.
+     * */
+    protected static int dropRow(char[][] b, int col, char emptyChar) {
+        for (int r = b.length - 1; r >= 0; r--) {
+            if (b[r][col] == emptyChar) return r;
+        }
+        return -1;
     }
 
 

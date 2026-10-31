@@ -25,8 +25,8 @@ public class MainGame {
         char[][] board = BoardFunctions.initBoard(rows, cols, emptyChar);
         BoardFunctions.printBoard(board, rows, cols);
 
-
+        // Uncomment below to test bot functionality when the bot moves first. Use ONLY in your computer's terminal.
+        //BotFunctions.aiPlay(board, 0, emptyChar, playerChar, botChar);
     }
-
 
 }
