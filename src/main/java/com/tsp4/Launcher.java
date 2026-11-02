@@ -1,8 +1,21 @@
 package com.tsp4;
-
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
+
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.node.ObjectNode;
 public class Launcher {
     @SuppressWarnings("CallToPrintStackTrace")
     public static void main (String [] args) throws FileNotFoundException {
@@ -51,17 +64,9 @@ public class Launcher {
         if (option == '2') {
         // TODO: Build concrete way to find settings file
             System.out.println("------------------- SETTINGS -------------------");
-            File parentDir = new File(
-                Launcher.class
-                    .getProtectionDomain()
-                    .getCodeSource()
-                    .getLocation()
-                    .getPath()
-            ).getParentFile();
-            File settingsFile = new File(parentDir, "settings.txt");
-            Map<String,String> settings = parseConfig(settingsFile);
-            for (Entry<String,String> e : settings.entrySet()) {
-                System.out.println(e.getKey() + ": " + e.getValue());
+            HashMap<String,String> settings = (HashMap)ReadConfig();
+            for(Entry<String,String> e : settings.entrySet()) {
+                System.out.printf("\t%s: %s\n", e.getKey(), e.getValue());
             }
         }
     }
@@ -135,29 +140,6 @@ public class Launcher {
 
         return gameFiles;
     }
-
-    /**
-     * Reads config file c and returns as Map<Setting,Value>
-     * @param c Config text file
-     * @return Map containing all settings and their set values.
-     * (MAY NOT NEED TO EXIST, WILL BE DECIDED LATER)
-     */
-    public static Map<String,String> parseConfig (File c) throws FileNotFoundException {
-        HashMap<String,String> configMap = new HashMap<>();
-        Scanner sc = new Scanner(c);
-
-        String line,key,value; 
-        while (sc.hasNext()) {
-            line = sc.nextLine();
-            String[] s = line.split(":");
-            key = s[0];
-            value = s[1];
-            configMap.put(key, value);
-        }
-
-        return configMap;
-
-    }
     
     // TODO: add ability to write to settings
     /**
@@ -165,9 +147,12 @@ public class Launcher {
      * 
      * 
      */
-    public static void ReadSettings() {
-        String settingsFile = "settings.txt";
+    public static Map<String,String> ReadConfig() {
+        String settingsFile = "config.json";
         File file = new File(settingsFile);
+        ObjectMapper mapper = new ObjectMapper();        
+        ObjectNode oNode;
+        HashMap<String,String> returnMap = new HashMap<>();
         
         // default settings
         int aiDifficulty = 2; // 1 = random, 2 = normal, 3 = hard
@@ -176,42 +161,26 @@ public class Launcher {
         
         try {
         	// if file doesn't exist, creates one with default settings
-        	if (!file.exists()) {
-        		try (PrintWriter writer = new PrintWriter(new FileWriter(file))) {
-                    writer.println("aiDifficulty=" + aiDifficulty);
-                    writer.println("turnOrder=" + turnOrder);
-                    writer.println("boardSize=" + boardSize);
-                }
-        	}
-        	
-        	// reads integer value attached to settings
-        	try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-                String line;
-
-                while ((line = reader.readLine()) != null) {
-                    String[] parts = line.split("=");
-
-                    if (parts.length == 2) {
-                        String key = parts[0].trim();
-                        String value = parts[1].trim();
-
-                        switch (key) {
-                            case "aiDifficulty":
-                                aiDifficulty = Integer.parseInt(value);
-                                break;
-                            case "turnOrder":
-                                turnOrder = Integer.parseInt(value);
-                                break;
-                            case "boardSize":
-                                boardSize = Integer.parseInt(value);
-                                break;
-                        }
-                    }
-                }
+        	if (file.createNewFile()) {
+        		System.out.println("Created new config.json file!");
+                oNode = (ObjectNode) mapper.readTree("config.json");
+                oNode.put("aiDifficulty",aiDifficulty);
+                oNode.put("turnOrder",turnOrder);
+                oNode.put("boardSize",boardSize);
+        	} else {
+                oNode = (ObjectNode) mapper.readTree("config.json");
             }
-        } catch (Exception e) {
-        	e.printStackTrace();
+            
+            Set<Entry<String,JsonNode>> props = oNode.properties();
+            for(Entry<String,JsonNode> e : props) {
+                returnMap.put(e.getKey(), e.getValue().asString());
+            }
+
+        } catch (IOException | JacksonException e) {
+            e.printStackTrace();
         }
+
+        return returnMap;
     }
     /**
      * Writes to the settings file.
@@ -224,7 +193,7 @@ public class Launcher {
         try {
             // if file doesn't exist, create it with default values
             if (!file.exists()) {
-                ReadSettings();
+                ReadConfig();
             }
 
             // prevents out of range settings
