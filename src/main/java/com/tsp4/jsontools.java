@@ -1,9 +1,6 @@
 package com.tsp4;
 
-import java.io.IOException;
-import java.io.InputStream;
-
-import com.tsp4.library.Connect4.Main;
+import java.io.File;
 
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
@@ -12,20 +9,13 @@ public class jsontools {
 
     /**
      * Creates a JsonNode object to read JSON files.
-     * @param configFileName
+     * @param configFile
      * @return JsonNode
      */
-    public static JsonNode jsonReader(String configFileName) {
+    public static JsonNode jsonReader(File configFile) {
 
-        // Tries to find the config file in the game folder
-        try (InputStream in = Main.class.getResourceAsStream(configFileName)) {
-            if (in == null) {
-                throw new RuntimeException("config file not found: " + configFileName);
-            }
-            // Returns the JsonNode if success
-            return new ObjectMapper().readTree(in);
-        } catch (IOException e) {
-            throw new RuntimeException("could not read " + configFileName, e);
-        }
+        if (!configFile.exists()) throw new RuntimeException("config file not found");
+        return new ObjectMapper().readTree(configFile);
+
     }
 }

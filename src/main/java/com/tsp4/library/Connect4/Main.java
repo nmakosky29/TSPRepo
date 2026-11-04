@@ -1,14 +1,22 @@
 package com.tsp4.library.Connect4;
 import static com.tsp4.jsontools.jsonReader;
 
+import com.tsp4.Launcher;
 import tools.jackson.databind.JsonNode;
+
+import java.io.File;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
+
+        // Gets parent directory and config file for game
+        File parentDir = new File(Main.class.getResource(".").toURI());
+        if (!parentDir.exists()) throw new Exception("parentDir not found");
+        File configFile = new File(parentDir, "config.json");
 
         // Makes new object to read JSON file
-        JsonNode config = jsonReader("config.json");
+        JsonNode config = jsonReader(configFile);
         String name = config.get("name").asString();
 
         // Checks to make sure correct file is loaded
