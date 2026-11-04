@@ -52,7 +52,7 @@ public class GameLoop {
                 break;
             }
 
-            // bot turm
+            // bot turn
             boolean botWon = BotFunctions.aiPlay(board, maxDepth, emptyChar, playerChar, botChar);
 
             if (botWon) {
