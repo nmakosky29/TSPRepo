@@ -87,10 +87,12 @@ public class BoardFunctions {
 
         // This section prints the col nums
         for (int j = 0; j < cols; j++) {
-            System.out.print(" | " + (j + 1));
+            if (j < 10) System.out.print(" | " + (j + 1));
+            else System.out.print("| " + (j + 1));
         }
 
-        System.out.print(" |");
+        if (cols < 10) System.out.print(" |");
+        else System.out.print("|");
 
         System.out.flush();
     }

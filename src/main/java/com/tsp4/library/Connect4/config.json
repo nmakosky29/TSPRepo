@@ -4,5 +4,6 @@
     "rows": 6,
     "emptyChar": ".",
     "playerChar": "X",
-    "botChar": "O"
+    "botChar": "O",
+    "botDifficulty": "0"
 }

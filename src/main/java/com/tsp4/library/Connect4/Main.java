@@ -28,13 +28,14 @@ public class Main {
         char emptyChar = config.get("emptyChar").asString().charAt(0);
         char playerChar = config.get("playerChar").asString().charAt(0);
         char botChar = config.get("botChar").asString().charAt(0);
+        int botDiff = config.get("botDifficulty").asInt();
 
         char[][] board = BoardFunctions.initBoard(rows, cols, emptyChar);
 
-        GameLoop.start(board, rows, cols, emptyChar, playerChar, botChar, 4);
+        GameLoop.start(board, rows, cols, emptyChar, playerChar, botChar, botDiff);
 
         // Uncomment below to test bot functionality when the bot moves first. Use ONLY in your computer's terminal.
-        BotFunctions.aiPlay(board, 0, emptyChar, playerChar, botChar);
+        //BotFunctions.aiPlay(board, botDiff, emptyChar, playerChar, botChar);
     }
 
 }
