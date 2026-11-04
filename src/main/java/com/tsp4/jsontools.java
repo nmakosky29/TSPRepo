@@ -3,6 +3,7 @@ package com.tsp4;
 import java.io.IOException;
 import java.io.InputStream;
 
+import com.tsp4.library.Connect4.Main;
 import com.tsp4.library.Connect4.MainGame;
 
 import tools.jackson.databind.JsonNode;
@@ -18,7 +19,7 @@ public class jsontools {
     public static JsonNode jsonReader(String configFileName) {
 
         // Tries to find the config file in the game folder
-        try (InputStream in = MainGame.class.getResourceAsStream(configFileName)) {
+        try (InputStream in = Main.class.getResourceAsStream(configFileName)) {
             if (in == null) {
                 throw new RuntimeException("config file not found: " + configFileName);
             }
