@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import com.tsp4.library.Connect4.Main;
-import com.tsp4.library.Connect4.MainGame;
 
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
