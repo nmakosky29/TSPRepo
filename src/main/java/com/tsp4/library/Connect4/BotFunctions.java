@@ -78,8 +78,8 @@ public class BotFunctions {
                     .min(Comparator.comparingDouble(n -> n.score))
                     .orElse(null);
 
-            // if the best possible move exists and is an available move, that is the bot's selection
-            if (lowest != null && baseNode.possiblePlays.contains(lowest.play)) selection = lowest.play;
+            // if the best possible move exists, that is the bot's selection
+            if (lowest != null) selection = lowest.play;
 
             // Otherwise, return the random move
             return selection;
@@ -110,49 +110,14 @@ public class BotFunctions {
         int landingRow = BoardFunctions.dropRow(b, selection, emptyChar);
 
         // Falling animation
-        for (int r = 0; r < landingRow; r++) {
-            b[r][selection] = botChar;
-            redraw(b);
-            sleep(300);
-            b[r][selection] = emptyChar;
-        }
+        BoardFunctions.fallingAnim(b, landingRow, selection, botChar, emptyChar);
         b[landingRow][selection] = botChar;
-        redraw(b);
+        BoardFunctions.redraw(b);
 
         // Blink if the column is now full
-        if (landingRow == 0) {
-            for (int i = 0; i < 5; i++) {
-                b[0][selection] = emptyChar;
-                redraw(b);
-                sleep(100);
-                b[0][selection] = botChar;
-                redraw(b);
-                sleep(100);
-            }
-        }
+        BoardFunctions.columnFullAnim(b, landingRow, selection, botChar, emptyChar);
 
         return BoardFunctions.checkWin(b, landingRow, selection, botChar) >= 4;
-    }
-
-    /**
-     * Sleep method.
-     * @param ms
-     */
-    private static void sleep(long ms) {
-        try {
-            Thread.sleep(ms);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-    }
-
-    /**
-     * Method to redraw board.
-     * @param b
-     */
-    private static void redraw(char[][] b) {
-        BoardFunctions.clearConsole();
-        BoardFunctions.printBoard(b, b.length, b[0].length);
     }
 
     /**

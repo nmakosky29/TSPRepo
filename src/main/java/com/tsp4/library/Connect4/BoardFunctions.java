@@ -3,7 +3,7 @@ package com.tsp4.library.Connect4;
 public class BoardFunctions {
 
     /**
-     * Clears the console.
+     * Method from the web to clear the console.
      */
     protected static void clearConsole() {
         try {
@@ -152,5 +152,47 @@ public class BoardFunctions {
         return -1;
     }
 
+    /**
+     * Sleep method.
+     * @param ms
+     */
+    protected static void sleep(long ms) {
+        try {
+            Thread.sleep(ms);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    /**
+     * Method to redraw board.
+     * @param b
+     */
+    protected static void redraw(char[][] b) {
+        BoardFunctions.clearConsole();
+        BoardFunctions.printBoard(b, b.length, b[0].length);
+    }
+
+    protected static void fallingAnim(char[][] b, int landingRow, int selection, char botChar, char emptyChar) {
+        for (int r = 0; r < landingRow; r++) {
+            b[r][selection] = botChar;
+            BoardFunctions.redraw(b);
+            BoardFunctions.sleep(300);
+            b[r][selection] = emptyChar;
+        }
+    }
+
+    protected static void columnFullAnim(char[][] b, int landingRow, int selection, char botChar, char emptyChar) {
+        if (landingRow == 0) {
+            for (int i = 0; i < 5; i++) {
+                b[0][selection] = emptyChar;
+                BoardFunctions.redraw(b);
+                BoardFunctions.sleep(100);
+                b[0][selection] = botChar;
+                BoardFunctions.redraw(b);
+                BoardFunctions.sleep(100);
+            }
+        }
+    }
 
 }

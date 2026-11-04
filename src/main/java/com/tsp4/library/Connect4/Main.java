@@ -3,7 +3,7 @@ import static com.tsp4.jsontools.jsonReader;
 
 import tools.jackson.databind.JsonNode;
 
-public class MainGame {
+public class Main {
 
     public static void main(String[] args) {
 
@@ -26,7 +26,7 @@ public class MainGame {
         GameLoop.start(board, rows, cols, emptyChar, playerChar, botChar, 4);
 
         // Uncomment below to test bot functionality when the bot moves first. Use ONLY in your computer's terminal.
-        //BotFunctions.aiPlay(board, 0, emptyChar, playerChar, botChar);
+        BotFunctions.aiPlay(board, 0, emptyChar, playerChar, botChar);
     }
 
 }
