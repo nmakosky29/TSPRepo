@@ -1,6 +1,6 @@
 {
     "name": "Connect4",
-    "columns": 7,
+    "columns": 10,
     "rows": 6,
     "emptyChar": ".",
     "playerChar": "X",
