@@ -20,6 +20,7 @@ public class Launcher {
     @SuppressWarnings("CallToPrintStackTrace")
     public static void main (String [] args) throws FileNotFoundException {
         ArrayList<File> library = (ArrayList<File>) ReadLibrary("library");
+        clearConsole();
 
         // Greeting Dialogue
         System.out.println("""
@@ -47,7 +48,7 @@ public class Launcher {
                 System.out.println("Invalid Input\nType 1. or 2.");
         }
 
-        System.out.println("\n");
+        clearConsole();
 
         if (option == '1') {
             System.out.println("------------------- LIBRARY -------------------");
@@ -57,17 +58,30 @@ public class Launcher {
             }
             int i = 1;
             for (File f : library) {
-                System.out.println(i + ". " +f.getName());
+                System.out.printf("\t%d. %s", i, f.getName());
                 i++;
             }
         }
         if (option == '2') {
-        // TODO: Build concrete way to find settings file
             System.out.println("------------------- SETTINGS -------------------");
+
+            /* FOR WHEN SETTINGS FILE IS MADE FOR LAUNCHER
             HashMap<String,String> settings = (HashMap)ReadConfig();
             for(Entry<String,String> e : settings.entrySet()) {
                 System.out.printf("\t%s: %s\n", e.getKey(), e.getValue());
+            } */
+
+            if (library.isEmpty()) {
+                System.out.println("Library is empty!");
             }
+            int i = 1;
+            for (File f : library) {
+                System.out.printf("\t%d. %s", i, f.getName());
+                i++;
+            }
+
+            // YOU LEFT OFF HERE ALEX
+            
         }
     }
 
