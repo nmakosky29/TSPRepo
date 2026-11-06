@@ -63,25 +63,43 @@ public class Launcher {
             }
         }
         if (option == '2') {
-            System.out.println("------------------- SETTINGS -------------------");
+            validInput = false;
+            while (!validInput) {
+                System.out.println("------------------- SETTINGS -------------------");
 
-            /* FOR WHEN SETTINGS FILE IS MADE FOR LAUNCHER
-            HashMap<String,String> settings = (HashMap)ReadConfig();
-            for(Entry<String,String> e : settings.entrySet()) {
-                System.out.printf("\t%s: %s\n", e.getKey(), e.getValue());
-            } */
+                /* FOR WHEN SETTINGS FILE IS MADE FOR LAUNCHER
+                HashMap<String,String> settings = (HashMap)ReadConfig();
+                for(Entry<String,String> e : settings.entrySet()) {
+                    System.out.printf("\t%s: %s\n", e.getKey(), e.getValue());
+                } */
 
-            if (library.isEmpty()) {
-                System.out.println("Library is empty!");
+                if (library.isEmpty()) {
+                    System.out.println("Library is empty!");
+                } else {
+                    System.out.println("Select a game to configure:");
+                }
+                int i = 1;
+                for (File f : library) {
+                    System.out.printf("\t%d. %s", i, f.getName());
+                    i++;
+                }
+
+                // User Inputs which game to select
+                int readbyte;
+                try{
+                    readbyte = System.in.read();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return;
+                }
+
+                option = (char) readbyte;
+
+                if (option <= library.size()) 
+                    validInput = true;
             }
-            int i = 1;
-            for (File f : library) {
-                System.out.printf("\t%d. %s", i, f.getName());
-                i++;
-            }
 
-            // YOU LEFT OFF HERE ALEX
-            
+
         }
     }
 
