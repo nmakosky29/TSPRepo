@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Scanner;
 import java.util.Set;
 
 import tools.jackson.core.JacksonException;
@@ -19,87 +20,77 @@ import tools.jackson.databind.node.ObjectNode;
 public class Launcher {
     @SuppressWarnings("CallToPrintStackTrace")
     public static void main (String [] args) throws FileNotFoundException {
-        ArrayList<File> library = (ArrayList<File>) ReadLibrary("library");
-        clearConsole();
-
-        // Greeting Dialogue
-        System.out.println("""
-                           ------------------- SIMPLE GAMES LAUNCHER -------------------
-                           \t1. View Library
-                           \t2. View Settings""");
-
-        // If used again, validInput must be reset to false
-        boolean validInput = false;
-        char option = 0;
-        while (!validInput) {
-            int readbyte;
-            try{
-                readbyte = System.in.read();
-            } catch (IOException e) {
-                e.printStackTrace();
-                return;
-            }
-
-            option = (char) readbyte;
-
-            if (option == '1' || option == '2') 
-                validInput = true;
-            else
-                System.out.println("Invalid Input\nType 1. or 2.");
-        }
-
-        clearConsole();
-
-        if (option == '1') {
-            System.out.println("------------------- LIBRARY -------------------");
-
-            if (library.isEmpty()) {
-                System.out.println("Library is empty!");
-            }
-            int i = 1;
-            for (File f : library) {
-                System.out.printf("\t%d. %s", i, f.getName());
-                i++;
-            }
-        }
-        if (option == '2') {
-            validInput = false;
+        try (Scanner sc = new Scanner(System.in)) {
+            String input;
+            ArrayList<File> library = (ArrayList<File>) ReadLibrary("library");
+            clearConsole();
+            
+            // Greeting Dialogue
+            System.out.println("""
+                                       ------------------- SIMPLE GAMES LAUNCHER -------------------
+                                       \t1. View Library
+                                       \t2. View Settings""");
+            
+            // If used again, validInput must be reset to false
+            boolean validInput = false;
+            char option = 0;
             while (!validInput) {
-                System.out.println("------------------- SETTINGS -------------------");
-
-                /* FOR WHEN SETTINGS FILE IS MADE FOR LAUNCHER
-                HashMap<String,String> settings = (HashMap)ReadConfig();
-                for(Entry<String,String> e : settings.entrySet()) {
-                    System.out.printf("\t%s: %s\n", e.getKey(), e.getValue());
-                } */
-
+                
+                input = sc.nextLine();
+                
+                
+                option = input.charAt(0);
+                
+                if (option == '1' || option == '2')
+                    validInput = true;
+                else
+                    System.out.println("Invalid Input\nType 1. or 2.");
+            }
+            
+            clearConsole();
+            
+            if (option == '1') {
+                System.out.println("------------------- LIBRARY -------------------");
+                
                 if (library.isEmpty()) {
                     System.out.println("Library is empty!");
-                } else {
-                    System.out.println("Select a game to configure:");
                 }
                 int i = 1;
                 for (File f : library) {
                     System.out.printf("\t%d. %s", i, f.getName());
                     i++;
                 }
-
-                // User Inputs which game to select
-                int readbyte;
-                try{
-                    readbyte = System.in.read();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    return;
-                }
-
-                option = (char) readbyte;
-
-                if (option <= library.size()) 
-                    validInput = true;
             }
+            if (option == '2') {
+                validInput = false;
+                while (!validInput) {
+                    System.out.println("------------------- SETTINGS -------------------\n");
+                    
+                    if (library.isEmpty()) {
+                        System.out.println("Library is empty!\n");
+                        System.out.println("Press enter to return.");
+                        sc.nextLine();
+                        validInput = true;
+                    } else {
+                        System.out.println("Select a game to configure:");
 
+                        int i = 1;
+                    for (File f : library) {
+                        System.out.printf("\t%d. %s", i, f.getName());
+                        i++;
+                    }
+                    
+                    // User Inputs which game to select
+                    input = sc.nextLine();
+                    option = input.charAt(0);
+                    
+                    if (library.isEmpty()) {
 
+                    } else if (option <= library.size())
+                        validInput = true;
+                    }
+                }
+            }
         }
     }
 
