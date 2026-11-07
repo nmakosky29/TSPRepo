@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -13,16 +14,17 @@ import java.util.Map.Entry;
 import java.util.Scanner;
 import java.util.Set;
 
+import com.tsp4.library.Connect4.Main;
 import tools.jackson.core.JacksonException;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.node.ObjectNode;
 public class Launcher {
     @SuppressWarnings("CallToPrintStackTrace")
-    public static void main (String [] args) throws FileNotFoundException {
+    public static void main (String [] args) throws FileNotFoundException, URISyntaxException {
         try (Scanner sc = new Scanner(System.in)) {
             String input;
-            ArrayList<File> library = (ArrayList<File>) ReadLibrary("library");
+            ArrayList<File> library = (ArrayList<File>) ReadLibrary();
             clearConsole();
             
             // Greeting Dialogue
@@ -130,33 +132,17 @@ public class Launcher {
 
     /**
      * Reads the library folder at directory targetDir.
-     * @param targetDir the library directory
      * @return List of game folders
      */
-    public static List<File> ReadLibrary(String targetDir) {
+    public static List<File> ReadLibrary() throws FileNotFoundException, URISyntaxException {
         ArrayList<File> gameFiles;
-        File libraryDir = new File(targetDir);
 
-        // Check if targetDir exists, throw error otherwise.
+        File parentDir = new File(Launcher.class.getResource(".").toURI());
+        if (!parentDir.exists()) throw new FileNotFoundException("parentDir not found");
+        File libraryDir = new File(parentDir, "library");
+
         if (!libraryDir.exists()) {
-            System.out.println("Invalid library path, checking Launcher directory for library.");
-
-            // Get the directory where this class is located
-            File parentDir = new File(
-                Launcher.class
-                    .getProtectionDomain()
-                    .getCodeSource()
-                    .getLocation()
-                    .getPath()
-            ).getParentFile();
-
-            libraryDir = new File(parentDir, "library");
-
-            // If there is no library in the directory where this class is located,
-            // create a new library folder.
-            if (!libraryDir.exists()) {
-                libraryDir.mkdir();
-            }
+            libraryDir.mkdir();
         }
 
         gameFiles = new ArrayList<>(Arrays.asList(libraryDir.listFiles()));
