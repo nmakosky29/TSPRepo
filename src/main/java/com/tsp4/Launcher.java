@@ -14,44 +14,44 @@ import java.util.Map.Entry;
 import java.util.Scanner;
 import java.util.Set;
 
-import com.tsp4.library.Connect4.Main;
 import tools.jackson.core.JacksonException;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 import tools.jackson.databind.node.ObjectNode;
 public class Launcher {
+    static final ObjectMapper mapper = new JsonMapper();
     @SuppressWarnings("CallToPrintStackTrace")
     public static void main (String [] args) throws FileNotFoundException, URISyntaxException {
         try (Scanner sc = new Scanner(System.in)) {
             String input;
             ArrayList<File> library = (ArrayList<File>) ReadLibrary();
+            boolean finished = false;
+            
+            while (!finished) {
             clearConsole();
             
             // Greeting Dialogue
             System.out.println("""
-                                       ------------------- SIMPLE GAMES LAUNCHER -------------------
-                                       \t1. View Library
-                                       \t2. View Settings""");
-            
-            // If used again, validInput must be reset to false
+                            ------------------- SIMPLE GAMES LAUNCHER -------------------
+                            \t1. View Library
+                            \t2. View Settings
+                            \t3. Exit""");
+
+            String option = "";
             boolean validInput = false;
-            char option = 0;
             while (!validInput) {
-                
-                input = sc.nextLine();
-                
-                
-                option = input.charAt(0);
-                
-                if (option == '1' || option == '2')
+                option = sc.nextLine().trim();
+
+                if (option.equals("1") || option.equals("2") || option.equals("3"))
                     validInput = true;
-                else
-                    System.out.println("Invalid Input\nType 1. or 2.");
+                //else
+                //    System.out.println("Invalid Input\nType 1, 2, or 3.");
             }
             
             clearConsole();
             
-            if (option == '1') {
+            if (option.equals("1")) {
                 System.out.println("------------------- LIBRARY -------------------");
                 
                 if (library.isEmpty()) {
@@ -59,14 +59,15 @@ public class Launcher {
                 }
                 int i = 1;
                 for (File f : library) {
-                    System.out.printf("\t%d. %s", i, f.getName());
+                    System.out.printf("\t%d. %s\n", i, f.getName());
                     i++;
                 }
             }
-            if (option == '2') {
+            if (option.equals("2")) {
                 validInput = false;
                 while (!validInput) {
-                    System.out.println("------------------- SETTINGS -------------------\n");
+                    clearConsole();
+                    System.out.println("------------------- SETTINGS -------------------");
                     
                     if (library.isEmpty()) {
                         System.out.println("Library is empty!\n");
@@ -77,21 +78,30 @@ public class Launcher {
                         System.out.println("Select a game to configure:");
 
                         int i = 1;
-                    for (File f : library) {
-                        System.out.printf("\t%d. %s", i, f.getName());
-                        i++;
-                    }
-                    
-                    // User Inputs which game to select
-                    input = sc.nextLine();
-                    option = input.charAt(0);
-                    
-                    if (library.isEmpty()) {
-
-                    } else if (option <= library.size())
-                        validInput = true;
+                        for (File f : library) {
+                            System.out.printf("\t%d. %s\n", i, f.getName());
+                            i++;
+                        }
+                        
+                        input = sc.nextLine().trim();
+                        try {
+                            int choice = Integer.parseInt(input);
+                            if (choice >= 1 && choice <= library.size()) {
+                                validInput = true;
+                                gameConfig(new File(library.get(choice - 1), "config.json"), sc);
+                            } else {
+                                System.out.println("Invalid Input");
+                            }
+                        } catch (NumberFormatException nfe) {
+                            System.out.println("Invalid Input");
+                        }
+                        
+                        
                     }
                 }
+            } else { 
+                finished = true; 
+            }
             }
         }
     }
@@ -228,5 +238,88 @@ public class Launcher {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * User interface for editing a game's config.json file.
+     * @param cFile config.json file for game
+     * @param in    Scanner object for standard input
+     */
+    public static void gameConfig(File cFile, Scanner in) {
+    // Until return
+    while (true) {
+        boolean validInput = false;
+
+        ObjectNode config = (ObjectNode) mapper.readTree(cFile);
+        String name = config.get("name").asString();
+        ArrayList<Map.Entry<String, JsonNode>> indeces = new ArrayList<Map.Entry<String, JsonNode>>(config.properties().size());
+
+
+        String sInput = "";
+        int iInput = 0;
+        int i = 1;
+
+        while (!validInput) {
+            clearConsole();
+            System.out.printf("------------------- %s Config -------------------\n", name);
+            System.out.println("Select a setting to edit:");
+
+            // String storing the Keys for config.properties() at the index they will be accessed from.
+
+            
+            for (Map.Entry<String, JsonNode> e : config.properties()) {
+                if (e.getKey().compareTo(name) != 0) {
+                    System.out.printf("\t%d. %s: %s\n", i, e.getKey(), e.getValue().asString());
+                    indeces.add(i-1, e);
+                    i++;
+                }
+            }
+            System.out.printf("\t%d. Exit\n", i);
+
+            sInput = in.next();
+            // Will throw NumberFormatException if the input is not an integer or double (ex: 2 or 2.)
+            iInput = (int)Double.parseDouble(sInput);
+            if (iInput == i) return;
+            validInput = true;
+        }
+        
+        validInput = false;
+        i = 1;
+        try {
+            while (!validInput) {
+            
+                int selectedIndex = iInput;
+
+                clearConsole();
+                System.out.printf("------------------- %s Config -------------------\n", name);
+                for (Map.Entry<String, JsonNode> e : indeces) {
+                    if (selectedIndex == i)
+                        System.out.printf("\t%d. %s: << %s >>\n", i, e.getKey(), e.getValue().asString());
+                    else 
+                        System.out.printf("\t%d. %s: %s\n", i, e.getKey(), e.getValue().asString());
+                    i++;
+                }
+                System.out.print("\nNew value: ");
+
+                sInput = in.next();
+                // If the setting value is an integer, set it as an integer
+                if (indeces.get(selectedIndex - 1).getValue().isInt()) {
+                    // Will throw NumberFormatException if the input is not an integer or double (ex: 2 or 2.)
+                    iInput = (int)Double.parseDouble(sInput);
+                    config.put(indeces.get(selectedIndex - 1).getKey(), iInput);
+                    validInput = true;
+                } else { 
+                //Assuming the only other option than an integer is a string
+                    config.put(indeces.get(selectedIndex - 1).getKey(), sInput);
+                    validInput = true;
+                }
+                
+                // Write to config.json and return
+                mapper.writerWithDefaultPrettyPrinter().writeValue(cFile, config);   // file specified when writing
+            }
+        } catch (NumberFormatException nfe) {
+
+        }
+    }
     }
 }
