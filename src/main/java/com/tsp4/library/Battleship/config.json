@@ -1,0 +1,9 @@
+{
+    "name": "BattleShip",
+    "columns": 10,
+    "rows": 10,
+    "waterChar": "~",
+    "shipChar": "=",
+    "hitChar": "X",
+    "missChar": "O"
+}
