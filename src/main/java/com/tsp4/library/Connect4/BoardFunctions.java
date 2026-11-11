@@ -175,22 +175,22 @@ public class BoardFunctions {
         BoardFunctions.printBoard(b, b.length, b[0].length);
     }
 
-    protected static void fallingAnim(char[][] b, int landingRow, int selection, char botChar, char emptyChar) {
+    protected static void fallingAnim(char[][] b, int landingRow, int selection, char moveChar, char emptyChar) {
         for (int r = 0; r < landingRow; r++) {
-            b[r][selection] = botChar;
+            b[r][selection] = moveChar;
             BoardFunctions.redraw(b);
             BoardFunctions.sleep(300);
             b[r][selection] = emptyChar;
         }
     }
 
-    protected static void columnFullAnim(char[][] b, int landingRow, int selection, char botChar, char emptyChar) {
+    protected static void columnFullAnim(char[][] b, int landingRow, int selection, char moveChar, char emptyChar) {
         if (landingRow == 0) {
             for (int i = 0; i < 5; i++) {
                 b[0][selection] = emptyChar;
                 BoardFunctions.redraw(b);
                 BoardFunctions.sleep(100);
-                b[0][selection] = botChar;
+                b[0][selection] = moveChar;
                 BoardFunctions.redraw(b);
                 BoardFunctions.sleep(100);
             }

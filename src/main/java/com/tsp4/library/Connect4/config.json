@@ -5,5 +5,5 @@
     "emptyChar": ".",
     "playerChar": "X",
     "botChar": "O",
-    "botDifficulty": "0"
+    "botDifficulty": "6"
 }

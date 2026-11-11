@@ -1,7 +1,6 @@
 package com.tsp4.library.Connect4;
 import static com.tsp4.jsontools.jsonReader;
 
-import com.tsp4.Launcher;
 import tools.jackson.databind.JsonNode;
 
 import java.io.File;
@@ -34,8 +33,6 @@ public class Main {
 
         GameLoop.start(board, rows, cols, emptyChar, playerChar, botChar, botDiff);
 
-        // Uncomment below to test bot functionality when the bot moves first. Use ONLY in your computer's terminal.
-        //BotFunctions.aiPlay(board, botDiff, emptyChar, playerChar, botChar);
     }
 
 }

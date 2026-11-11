@@ -1,6 +1,7 @@
 package com.tsp4.library.Battleship;
 
 public class BoardFunctions {
+
     protected static char[][] initBoard(int cols, int rows, char waterChar) {
         char[][] b = new char[rows][cols];
 
@@ -36,6 +37,47 @@ public class BoardFunctions {
         }
 
         System.out.flush();
+    }
+
+    /**
+     * Method from the web to clear the console.
+     */
+    protected static void clearConsole() {
+        try {
+            // 1. Attempt ANSI escape codes
+            System.out.print("\033[H\033[2J");
+            System.out.flush();
+
+            // 2. Attempt OS-specific clear command
+            String os = System.getProperty("os.name").toLowerCase();
+
+            if (os.contains("win")) {
+                new ProcessBuilder("cmd", "/c", "cls")
+                        .inheritIO()
+                        .start()
+                        .waitFor();
+            } else {
+                new ProcessBuilder("clear")
+                        .inheritIO()
+                        .start()
+                        .waitFor();
+            }
+
+        } catch (Exception e) {
+            // 3. Fallback: print blank lines
+            for (int i = 0; i < 50; i++) {
+                System.out.println();
+            }
+        }
+    }
+
+    /**
+     * Method to redraw board.
+     * @param b
+     */
+    protected static void redraw(char[][] b) {
+        BoardFunctions.clearConsole();
+        BoardFunctions.printBoard(b, b.length, b[0].length);
     }
 
 }

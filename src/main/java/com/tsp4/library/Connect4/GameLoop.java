@@ -16,7 +16,7 @@ public class GameLoop {
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
-
+            
             BoardFunctions.clearConsole();
             BoardFunctions.printBoard(board, rows, cols);
 
@@ -42,7 +42,9 @@ public class GameLoop {
                 continue;
             }
 
+            BoardFunctions.fallingAnim(board, landingRow, selection, playerChar, emptyChar);
             board[landingRow][selection] = playerChar;
+            BoardFunctions.columnFullAnim(board, landingRow, selection, playerChar, emptyChar);
 
             // checks for a win
             if (BoardFunctions.checkWin(board, landingRow, selection, playerChar) >= 4) {
