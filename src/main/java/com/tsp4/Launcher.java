@@ -22,7 +22,7 @@ import tools.jackson.databind.node.ObjectNode;
 public class Launcher {
     static final ObjectMapper mapper = new JsonMapper();
     @SuppressWarnings("CallToPrintStackTrace")
-    public static void main (String [] args) throws FileNotFoundException, URISyntaxException {
+    public static void main (String [] args) throws URISyntaxException, InterruptedException, IOException {
         try (Scanner sc = new Scanner(System.in)) {
             String input;
             ArrayList<File> library = (ArrayList<File>) ReadLibrary();
@@ -62,8 +62,41 @@ public class Launcher {
                     System.out.printf("\t%d. %s\n", i, f.getName());
                     i++;
                 }
+                // User selects game
+                validInput = false;
+                while (!validInput) {
+                    option = sc.nextLine().trim();
+                    try {
+                            int choice = Integer.parseInt(option);
+                            if (choice >= 1 && choice <= library.size()) {
+                                validInput = true;
+                                File gameDir = library.get(choice - 1);
+
+                                if (!new File(gameDir, "Main.class").exists()) {
+                                    System.out.println("No Main.java found in " + gameDir.getAbsolutePath());
+                                } else {
+                                    try {
+                                        String mainClass = "com.tsp4.library." + gameDir.getName() + ".Main";
+                                        int exitCode = new ProcessBuilder("java", "-cp", System.getProperty("java.class.path"), mainClass)
+                                                .inheritIO()
+                                                .start()
+                                                .waitFor();
+                                        System.out.println("\nGame exited with code " + exitCode);
+                                    } catch (IOException | InterruptedException e) {
+                                        System.out.println("Could not launch game: " + e);
+                                    }
+                                }
+                                System.out.println("Press enter to return to the menu.");
+                                sc.nextLine();
+                            }
+                        } catch (NumberFormatException nfe) {
+                            System.out.println("Invalid Input");
+                        } 
+                }
+                
+
             }
-            if (option.equals("2")) {
+            else if (option.equals("2")) {
                 validInput = false;
                 while (!validInput) {
                     clearConsole();
