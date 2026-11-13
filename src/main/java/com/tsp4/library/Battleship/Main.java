@@ -32,5 +32,9 @@ public class Main {
         char[][] board = BoardFunctions.initBoard(cols, rows, waterChar);
 
         BoardFunctions.printBoard(board, rows, cols);
+
+        /* aiInit() and printShipBoards() are for bot testing */
+        BotFunctions.aiInit(cols, rows, waterChar, shipChar);
+        BotFunctions.printShipBoards();
     }
 }

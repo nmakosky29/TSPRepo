@@ -3,7 +3,7 @@
     "columns": 10,
     "rows": 10,
     "waterChar": "~",
-    "shipChar": "=",
+    "shipChar": "$",
     "hitChar": "X",
     "missChar": "O"
 }

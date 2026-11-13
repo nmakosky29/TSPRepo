@@ -2,6 +2,13 @@ package com.tsp4.library.Battleship;
 
 public class BoardFunctions {
 
+    /**
+     * Creates the Player's board
+     * @param cols
+     * @param rows
+     * @param waterChar
+     * @return initialized board
+     */
     protected static char[][] initBoard(int cols, int rows, char waterChar) {
         char[][] b = new char[rows][cols];
 
@@ -14,6 +21,12 @@ public class BoardFunctions {
         return b;
     }
 
+    /**
+     * Prints the board with letters and numbers
+     * @param b
+     * @param rows
+     * @param cols
+     */
     protected static void printBoard(char[][] b, int rows, int cols) {
         char[] letters = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'};
 
