@@ -5,5 +5,6 @@
     "waterChar": "~",
     "shipChar": "$",
     "hitChar": "X",
-    "missChar": "O"
+    "missChar": "O",
+	"cursorChar": "V"
 }

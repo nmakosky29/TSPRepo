@@ -2,6 +2,15 @@ package com.tsp4.library.Battleship;
 
 public class BoardFunctions {
 
+	private static final String RESET = "\u001B[0m";
+
+	private static final String BLUE = "\u001B[34m";
+	private static final String GREEN = "\u001B[32m";
+	private static final String RED = "\u001B[31m";
+	private static final String YELLOW = "\u001B[33m";
+	private static final String CYAN = "\u001B[96m";
+	private static final String BRIGHT_RED = "\u001B[91m";
+	
     /**
      * Creates the Player's board
      * @param cols
@@ -17,7 +26,6 @@ public class BoardFunctions {
                 b[i][j] = waterChar;
             }
         }
-
         return b;
     }
 
@@ -41,8 +49,38 @@ public class BoardFunctions {
             System.out.print(i + 1);
             if ((i + 1) < 10) System.out.print(" ");
 
+            // vibe coded slop
             for (int j = 0; j < cols; j++) {
-                System.out.print(b[i][j]);
+
+                char c = b[i][j];
+
+                switch (c) {
+
+                    case '~':
+                        System.out.print(BLUE + c + RESET);
+                        break;
+
+                    case '$':
+                        System.out.print(GREEN + c + RESET);
+                        break;
+
+                    case 'X':
+                        System.out.print(RED + c + RESET);
+                        break;
+
+                    case 'O':
+                        System.out.print(YELLOW + c + RESET);
+                        break;
+
+                    case 'V':
+                        System.out.print(CYAN + c + RESET);
+                        break;
+
+                    default:
+                        System.out.print(c);
+                        break;
+                }
+
                 System.out.print(" ");
             }
 
