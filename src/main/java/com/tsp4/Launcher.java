@@ -4,7 +4,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -48,16 +47,28 @@ public class Launcher {
             switch (option) {
                 // Case "1": User selects 1. Library
                 case "1" -> {
-                    System.out.println("------------------- LIBRARY -------------------");
-                    if (library.isEmpty()) {
-                        System.out.println("Library is empty!");
-                    }       int i = 1;
-                    for (File f : library) {
-                        System.out.printf("\t%d. %s\n", i, f.getName());
-                        i++;
-                    }       // User selects game
                     validInput = false;
                     while (!validInput) {
+                        clearConsole();
+                        System.out.println("------------------- LIBRARY -------------------");
+
+                        // If library is empty, print message
+                        if (library.isEmpty()) {
+                            System.out.println("Library is empty!");
+                        } else {
+                            // Otherwise, print library
+                            int i = 1;
+                            for (File f : library) {
+                            System.out.printf("\t%d. %s\n", i, f.getName());
+                            i++;
+                            }       
+
+                            // Add 'back' option
+                            System.out.printf("\t%d. Back\n", i);
+                        }
+                        
+                        
+                        // User selects game
                         option = sc.nextLine().trim();
                         try {
                             int choice = Integer.parseInt(option);
@@ -86,6 +97,8 @@ public class Launcher {
                                 }
                                 System.out.println("Press enter to return to the menu.");
                                 sc.nextLine();
+                            } else if (choice == library.size()+1) {
+                                validInput = true;
                             }
                         } catch (NumberFormatException nfe) {
                             System.out.println("Invalid Input");
@@ -108,11 +121,13 @@ public class Launcher {
                         } else {
                             System.out.println("Select a game to configure:");
                             
+                            // Print library
                             int i = 1;
                             for (File f : library) {
                                 System.out.printf("\t%d. %s\n", i, f.getName());
                                 i++;
                             }
+                            System.out.printf("\t%d. Back\n", i);
                             
                             input = sc.nextLine().trim();
                             try {
@@ -120,6 +135,8 @@ public class Launcher {
                                 if (choice >= 1 && choice <= library.size()) {
                                     validInput = true;
                                     gameConfig(new File(library.get(choice - 1), "config.json"), sc);
+                                } else if (choice == library.size()+1) {
+                                    validInput = true;
                                 } else {
                                     System.out.println("Invalid Input");
                                 }
@@ -185,7 +202,13 @@ public class Launcher {
             libraryDir.mkdir();
         }
 
-        gameFiles = new ArrayList<>(Arrays.asList(libraryDir.listFiles()));
+        //gameFiles = new ArrayList<>(Arrays.asList(libraryDir.listFiles()));
+        gameFiles = new ArrayList<>();
+        for (File g : libraryDir.listFiles()) {
+            if (new File(g, "Main.class").exists() && new File(g, "config.json").exists()) {
+                gameFiles.add(g);
+            }
+        }
 
         return gameFiles;
     }
