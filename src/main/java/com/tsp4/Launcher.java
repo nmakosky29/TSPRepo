@@ -1,20 +1,14 @@
 package com.tsp4;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Scanner;
-import java.util.Set;
 
-import tools.jackson.core.JacksonException;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.json.JsonMapper;
@@ -51,29 +45,33 @@ public class Launcher {
             
             clearConsole();
             
-            if (option.equals("1")) {
-                System.out.println("------------------- LIBRARY -------------------");
-                
-                if (library.isEmpty()) {
-                    System.out.println("Library is empty!");
-                }
-                int i = 1;
-                for (File f : library) {
-                    System.out.printf("\t%d. %s\n", i, f.getName());
-                    i++;
-                }
-                // User selects game
-                validInput = false;
-                while (!validInput) {
-                    option = sc.nextLine().trim();
-                    try {
+            switch (option) {
+                // Case "1": User selects 1. Library
+                case "1" -> {
+                    System.out.println("------------------- LIBRARY -------------------");
+                    if (library.isEmpty()) {
+                        System.out.println("Library is empty!");
+                    }       int i = 1;
+                    for (File f : library) {
+                        System.out.printf("\t%d. %s\n", i, f.getName());
+                        i++;
+                    }       // User selects game
+                    validInput = false;
+                    while (!validInput) {
+                        option = sc.nextLine().trim();
+                        try {
                             int choice = Integer.parseInt(option);
+                            
+                            // If the user input is an int between 1 and the number of games, continue to game, otherwise loop
                             if (choice >= 1 && choice <= library.size()) {
                                 validInput = true;
                                 File gameDir = library.get(choice - 1);
-
+                                
+                                // If the main class of the game does not exist, prompt user to return to menu
                                 if (!new File(gameDir, "Main.class").exists()) {
                                     System.out.println("No Main.java found in " + gameDir.getAbsolutePath());
+                                    
+                                    // Otherwise, launch game using ProcessBuilder
                                 } else {
                                     try {
                                         String mainClass = "com.tsp4.library." + gameDir.getName() + ".Main";
@@ -91,55 +89,54 @@ public class Launcher {
                             }
                         } catch (NumberFormatException nfe) {
                             System.out.println("Invalid Input");
-                        } 
-                }
-                
-
-            }
-            else if (option.equals("2")) {
-                validInput = false;
-                while (!validInput) {
-                    clearConsole();
-                    System.out.println("------------------- SETTINGS -------------------");
-                    
-                    if (library.isEmpty()) {
-                        System.out.println("Library is empty!\n");
-                        System.out.println("Press enter to return.");
-                        sc.nextLine();
-                        validInput = true;
-                    } else {
-                        System.out.println("Select a game to configure:");
-
-                        int i = 1;
-                        for (File f : library) {
-                            System.out.printf("\t%d. %s\n", i, f.getName());
-                            i++;
                         }
-                        
-                        input = sc.nextLine().trim();
-                        try {
-                            int choice = Integer.parseInt(input);
-                            if (choice >= 1 && choice <= library.size()) {
-                                validInput = true;
-                                gameConfig(new File(library.get(choice - 1), "config.json"), sc);
-                            } else {
-                                System.out.println("Invalid Input");
-                            }
-                        } catch (NumberFormatException nfe) {
-                            System.out.println("Invalid Input");
-                        }
-                        
-                        
                     }
                 }
-            } else { 
-                finished = true; 
+
+                // Case "2": User selects 2. Settings
+                case "2" -> {
+                    validInput = false;
+                    while (!validInput) {
+                        clearConsole();
+                        System.out.println("------------------- SETTINGS -------------------");
+                        
+                        if (library.isEmpty()) {
+                            System.out.println("Library is empty!\n");
+                            System.out.println("Press enter to return.");
+                            sc.nextLine();
+                            validInput = true;
+                        } else {
+                            System.out.println("Select a game to configure:");
+                            
+                            int i = 1;
+                            for (File f : library) {
+                                System.out.printf("\t%d. %s\n", i, f.getName());
+                                i++;
+                            }
+                            
+                            input = sc.nextLine().trim();
+                            try {
+                                int choice = Integer.parseInt(input);
+                                if (choice >= 1 && choice <= library.size()) {
+                                    validInput = true;
+                                    gameConfig(new File(library.get(choice - 1), "config.json"), sc);
+                                } else {
+                                    System.out.println("Invalid Input");
+                                }
+                            } catch (NumberFormatException nfe) {
+                                System.out.println("Invalid Input");
+                            }
+                            
+                            
+                        }
+                    }
+                }
+                default -> finished = true;
             }
             }
         }
     }
 
-    // TODO: Finish testing/debugging this method
     /**
      * Clears the current console. WIP
      * Rev 2: used the one from BoardFunctions that's from the web
@@ -165,7 +162,7 @@ public class Launcher {
                         .waitFor();
             }
 
-        } catch (Exception e) {
+        } catch (IOException | InterruptedException e) {
             // 3. Fallback: print blank lines
             for (int i = 0; i < 50; i++) {
                 System.out.println();
@@ -192,103 +189,23 @@ public class Launcher {
 
         return gameFiles;
     }
-    
-    // TODO: add ability to write to settings
-    /**
-     * Reads settings.txt and stores settings as variables, or creates the file if one does not exist.
-     * 
-     * 
-     */
-    public static Map<String,String> ReadConfig() {
-        String settingsFile = "config.json";
-        File file = new File(settingsFile);
-        ObjectMapper mapper = new ObjectMapper();        
-        ObjectNode oNode;
-        HashMap<String,String> returnMap = new HashMap<>();
-        
-        // default settings
-        int aiDifficulty = 2; // 1 = random, 2 = normal, 3 = hard
-        int turnOrder = 1; // 1 = player first, 2 = AI first
-        int boardSize = 2; // 1 = small, 2 = normal, 3 = large
-        
-        try {
-        	// if file doesn't exist, creates one with default settings
-        	if (file.createNewFile()) {
-        		System.out.println("Created new config.json file!");
-                oNode = (ObjectNode) mapper.readTree("config.json");
-                oNode.put("aiDifficulty",aiDifficulty);
-                oNode.put("turnOrder",turnOrder);
-                oNode.put("boardSize",boardSize);
-        	} else {
-                oNode = (ObjectNode) mapper.readTree("config.json");
-            }
-            
-            Set<Entry<String,JsonNode>> props = oNode.properties();
-            for(Entry<String,JsonNode> e : props) {
-                returnMap.put(e.getKey(), e.getValue().asString());
-            }
-
-        } catch (IOException | JacksonException e) {
-            e.printStackTrace();
-        }
-
-        return returnMap;
-    }
-    /**
-     * Writes to the settings file.
-     * @param updatedSettings the list of settings that will be written, in order of the file
-     */
-    public static void WriteSettings(int[] updatedSettings) {
-        String settingsFile = "settings.txt";
-        File file = new File(settingsFile);
-
-        try {
-            // if file doesn't exist, create it with default values
-            if (!file.exists()) {
-                ReadConfig();
-            }
-
-            // prevents out of range settings
-            int aiDifficulty = updatedSettings[0];
-            if (aiDifficulty < 1) aiDifficulty = 1;
-            if (aiDifficulty > 3) aiDifficulty = 3;
-
-            int turnOrder = updatedSettings[1];
-            if (turnOrder < 1) turnOrder = 1;
-            if (turnOrder > 2) turnOrder = 2;
-
-            int boardSize = updatedSettings[2];
-            if (boardSize < 1) boardSize = 1;
-            if (boardSize > 3) boardSize = 3;
-
-            // writes new settings into file
-            try (PrintWriter writer = new PrintWriter(new FileWriter(file))) {
-                writer.println("aiDifficulty=" + aiDifficulty);
-                writer.println("turnOrder=" + turnOrder);
-                writer.println("boardSize=" + boardSize);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     /**
      * User interface for editing a game's config.json file.
      * @param cFile config.json file for game
      * @param in    Scanner object for standard input
      */
-    public static void gameConfig(File cFile, Scanner in) {
+    private static void gameConfig(File cFile, Scanner in) {
     // Until return
     while (true) {
         boolean validInput = false;
 
         ObjectNode config = (ObjectNode) mapper.readTree(cFile);
         String name = config.get("name").asString();
-        ArrayList<Map.Entry<String, JsonNode>> indeces = new ArrayList<Map.Entry<String, JsonNode>>(config.properties().size());
+        ArrayList<Map.Entry<String, JsonNode>> indeces = new ArrayList<>(config.properties().size());
 
 
-        String sInput = "";
+        String sInput;
         int iInput = 0;
         int i = 1;
 
