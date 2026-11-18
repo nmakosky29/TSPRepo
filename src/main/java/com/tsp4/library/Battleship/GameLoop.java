@@ -32,20 +32,18 @@ public class GameLoop {
             int cols = config.get("columns").asInt();
             int rows = config.get("rows").asInt();
 
-            char waterChar =
-                    config.get("waterChar")
-                            .asString()
-                            .charAt(0);
-
-            char shipChar =
-                    config.get("shipChar")
-                            .asString()
-                            .charAt(0);
-
-            char cursorChar =
-                    config.get("cursorChar")
-                            .asString()
-                            .charAt(0);
+            char waterChar = config.get("waterChar").asString().charAt(0);
+            char shipChar = config.get("shipChar").asString().charAt(0);
+            char hitChar = config.get("hitChar").asString().charAt(0);
+            char missChar = config.get("missChar").asString().charAt(0);
+            char cursorChar = config.get("cursorChar").asString().charAt(0);
+            
+            BoardFunctions.initSymbols(
+                    waterChar,
+                    shipChar,
+                    hitChar,
+                    missChar,
+                    cursorChar);
 
             char[][] playerBoard =
                     BoardFunctions.initBoard(
@@ -94,7 +92,7 @@ public class GameLoop {
                             "Place ship of length "
                                     + currentShipLength);
                     System.out.println(
-                            "Arrow Keys = Move");
+                            "WASD = Move");
                     System.out.println(
                             "R = Rotate");
                     System.out.println(
@@ -137,47 +135,35 @@ public class GameLoop {
                         continue;
                     }
 
-                    if (ch == 27) {
+                    switch (Character.toLowerCase((char) ch)) {
 
-                        int second =
-                                terminal.reader().read();
+                    case 'w':
+                        cursorRow =
+                                Math.max(
+                                        0,
+                                        cursorRow - 1);
+                        break;
 
-                        if (second == '[') {
+                    case 's':
+                        cursorRow =
+                                Math.min(
+                                        rows - 1,
+                                        cursorRow + 1);
+                        break;
 
-                            int third =
-                                    terminal.reader().read();
+                    case 'a':
+                        cursorCol =
+                                Math.max(
+                                        0,
+                                        cursorCol - 1);
+                        break;
 
-                            switch (third) {
-
-                                case 'A':
-                                    cursorRow =
-                                            Math.max(
-                                                    0,
-                                                    cursorRow - 1);
-                                    break;
-
-                                case 'B':
-                                    cursorRow =
-                                            Math.min(
-                                                    rows - 1,
-                                                    cursorRow + 1);
-                                    break;
-
-                                case 'C':
-                                    cursorCol =
-                                            Math.min(
-                                                    cols - 1,
-                                                    cursorCol + 1);
-                                    break;
-
-                                case 'D':
-                                    cursorCol =
-                                            Math.max(
-                                                    0,
-                                                    cursorCol - 1);
-                                    break;
-                            }
-                        }
+                    case 'd':
+                        cursorCol =
+                                Math.min(
+                                        cols - 1,
+                                        cursorCol + 1);
+                        break;
                     }
                 }
 

@@ -2,14 +2,21 @@ package com.tsp4.library.Battleship;
 
 public class BoardFunctions {
 
+	// constants to control colors
 	private static final String RESET = "\u001B[0m";
-
 	private static final String BLUE = "\u001B[34m";
 	private static final String GREEN = "\u001B[32m";
 	private static final String RED = "\u001B[31m";
 	private static final String YELLOW = "\u001B[33m";
 	private static final String CYAN = "\u001B[96m";
 	private static final String BRIGHT_RED = "\u001B[91m";
+	
+	// allows for characters in the config to change
+	private static char waterChar;
+	private static char shipChar;
+	private static char hitChar;
+	private static char missChar;
+	private static char cursorChar;
 	
     /**
      * Creates the Player's board
@@ -27,6 +34,22 @@ public class BoardFunctions {
             }
         }
         return b;
+    }
+    
+    /**
+     * Initializes board symbols from config.
+     * @param water
+     * @param ship
+     * @param hit
+     * @param miss
+     * @param cursor
+     */
+    protected static void initSymbols(char water, char ship, char hit, char miss, char cursor) {
+        waterChar = water;
+        shipChar = ship;
+        hitChar = hit;
+        missChar = miss;
+        cursorChar = cursor;
     }
 
     /**
@@ -49,47 +72,41 @@ public class BoardFunctions {
             System.out.print(i + 1);
             if ((i + 1) < 10) System.out.print(" ");
 
-            // vibe coded slop
+            // vibe coded slop, slightly optimized
             for (int j = 0; j < cols; j++) {
-
                 char c = b[i][j];
-
-                switch (c) {
-
-                    case '~':
-                        System.out.print(BLUE + c + RESET);
-                        break;
-
-                    case '$':
-                        System.out.print(GREEN + c + RESET);
-                        break;
-
-                    case 'X':
-                        System.out.print(RED + c + RESET);
-                        break;
-
-                    case 'O':
-                        System.out.print(YELLOW + c + RESET);
-                        break;
-
-                    case 'V':
-                        System.out.print(CYAN + c + RESET);
-                        break;
-
-                    default:
-                        System.out.print(c);
-                        break;
-                }
-
+                System.out.print(colorize(c));
                 System.out.print(" ");
             }
-
             System.out.println();
         }
 
         System.out.flush();
     }
 
+    /**
+     * Returns a colored version of the supplied character.
+     * @param c
+     * @return colored character string
+     */
+    private static String colorize(char c) {
+
+        if (c == waterChar)
+            return BLUE + c + RESET;
+        if (c == shipChar)
+            return GREEN + c + RESET;
+        if (c == hitChar)
+            return RED + c + RESET;
+        if (c == missChar)
+            return YELLOW + c + RESET;
+        if (c == cursorChar)
+            return CYAN + c + RESET;
+        if (c == '!')
+            return BRIGHT_RED + c + RESET;
+
+        return Character.toString(c);
+    }
+    
     /**
      * Method from the web to clear the console.
      */
